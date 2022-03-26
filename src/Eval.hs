@@ -11,9 +11,16 @@ import           Data.SExpresso.SExpr
 -- Every value is a function
 type Type = ([String], String)
 
+type EBindings = M.Map String [Location]
+
+type ETypes = M.Map String Type
+
+type ERefs = M.Map String [(String, Location)]
+
 data Env = Env {
-  e_bindings :: IORef (M.Map String [Location]),
-  e_types    :: IORef (M.Map String Type)
+  e_bindings :: IORef EBindings,
+  e_types    :: IORef ETypes,
+  e_refs     :: IORef ERefs
 }
 
 type App = ReaderT Env IO
@@ -23,8 +30,8 @@ locOf se = case se of
   SList (At loc _) _ -> loc
   SAtom (At loc _)   -> loc
 
-log' :: String -> App ()
-log' = liftIO . putStrLn
+ps :: String -> App ()
+ps = liftIO . putStrLn
 
 addBinding :: String -> Location -> App ()
 addBinding name loc = do
@@ -37,33 +44,51 @@ addType name typeInfo = do
   liftIO $ modifyIORef e_types $ M.insert name typeInfo
 
 declareFun :: Location -> [SE] -> App ()
-declareFun loc args = do
-  case args of
-    [name, SList _ f_args, ret] -> do
-      let name' = pretty name
-      addBinding name' loc
-      addType name' (map pretty f_args, pretty ret)
-    _ -> do
-      log' $ "declareFun: did not receive [name, args, ret]: " <> (unwords $ map pretty args)
+declareFun loc = \case
+  [name, SList _ f_args, ret] -> do
+    let name' = pretty name
+    addBinding name' loc
+    addType name' (map pretty f_args, pretty ret)
+  ow -> ps $ "declareFun: did not receive [name, args, ret]: " <> pretty ow
+
+addReference :: String -> (String, Location) -> App ()
+addReference name info = do
+  e_refs <- asks e_refs
+  liftIO $ modifyIORef e_refs $ M.insertWith (flip (<>)) name [info]
+
+markUsed :: Location -> SE -> SE -> App ()
+markUsed loc og = \case
+  SAtom (At aloc v) -> do
+    -- `v` is referenced/constrained by:
+    --    * `og` at `loc`
+    addReference v (pretty og, loc)
+  SList _ vs -> mapM_ (markUsed loc og) vs
+
+doAssert :: Location -> SE -> [SE] -> App ()
+doAssert loc og args = do
+  mapM_ (markUsed loc og) args
 
 evalSExpr :: SE -> App ()
 evalSExpr se = case se of
   SList _ ( SAtom (At _ kwd) : args) ->
     case kwd of
       "declare-fun" -> declareFun loc args
+      "assert"      -> doAssert loc se args
       _             -> return ()
   SList _ _ -> return ()
   SAtom _ -> return ()
   where
     loc = locOf se
 
-eval :: [SE] -> IO (M.Map String [Location], M.Map String Type)
+eval :: [SE] -> IO (EBindings, ETypes, ERefs)
 eval ses = do
   e_bindings <- newIORef mempty
   e_types <- newIORef mempty
+  e_refs <- newIORef mempty
   let env = Env {..}
   flip runReaderT env $ do
     mapM_ evalSExpr ses
   bindings <- readIORef e_bindings
   types <- readIORef e_types
-  return (bindings, types)
+  refs <- readIORef e_refs
+  return (bindings, types, refs)
