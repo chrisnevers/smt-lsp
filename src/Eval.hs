@@ -1,4 +1,4 @@
-module Eval where
+module Eval (eval, EBindings(..), ETypes(..), ERefs(..)) where
 
 
 import           Ast

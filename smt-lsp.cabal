@@ -32,12 +32,13 @@ library
       Paths_smt_lsp
   hs-source-dirs:
       src
-  default-extensions: BangPatterns DeriveAnyClass DeriveDataTypeable DeriveGeneric DerivingStrategies EmptyDataDeriving FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns NumericUnderscores OverloadedStrings PartialTypeSignatures RankNTypes RecordWildCards ScopedTypeVariables StrictData TemplateHaskell TupleSections TypeApplications TypeSynonymInstances
+  default-extensions: BangPatterns DataKinds DeriveAnyClass DeriveDataTypeable DeriveGeneric DerivingStrategies EmptyDataDeriving FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns NumericUnderscores OverloadedStrings PartialTypeSignatures RankNTypes RecordWildCards ScopedTypeVariables StrictData TemplateHaskell TupleSections TypeApplications TypeSynonymInstances
   build-depends:
       base >=4.7 && <5
     , containers
     , megaparsec
     , mtl
+    , safe
     , sexpresso
     , text
   default-language: Haskell2010
@@ -48,13 +49,18 @@ executable smt-lsp-exe
       Paths_smt_lsp
   hs-source-dirs:
       app
-  default-extensions: BangPatterns DeriveAnyClass DeriveDataTypeable DeriveGeneric DerivingStrategies EmptyDataDeriving FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns NumericUnderscores OverloadedStrings PartialTypeSignatures RankNTypes RecordWildCards ScopedTypeVariables StrictData TemplateHaskell TupleSections TypeApplications TypeSynonymInstances
+  default-extensions: BangPatterns DataKinds DeriveAnyClass DeriveDataTypeable DeriveGeneric DerivingStrategies EmptyDataDeriving FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns NumericUnderscores OverloadedStrings PartialTypeSignatures RankNTypes RecordWildCards ScopedTypeVariables StrictData TemplateHaskell TupleSections TypeApplications TypeSynonymInstances
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
+    , hslogger
+    , lens
+    , lsp
+    , lsp-types
     , megaparsec
     , mtl
+    , safe
     , sexpresso
     , smt-lsp
     , text
@@ -67,13 +73,14 @@ test-suite smt-lsp-test
       Paths_smt_lsp
   hs-source-dirs:
       test
-  default-extensions: BangPatterns DeriveAnyClass DeriveDataTypeable DeriveGeneric DerivingStrategies EmptyDataDeriving FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns NumericUnderscores OverloadedStrings PartialTypeSignatures RankNTypes RecordWildCards ScopedTypeVariables StrictData TemplateHaskell TupleSections TypeApplications TypeSynonymInstances
+  default-extensions: BangPatterns DataKinds DeriveAnyClass DeriveDataTypeable DeriveGeneric DerivingStrategies EmptyDataDeriving FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns NumericUnderscores OverloadedStrings PartialTypeSignatures RankNTypes RecordWildCards ScopedTypeVariables StrictData TemplateHaskell TupleSections TypeApplications TypeSynonymInstances
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
     , megaparsec
     , mtl
+    , safe
     , sexpresso
     , smt-lsp
     , text

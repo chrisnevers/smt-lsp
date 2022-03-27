@@ -11,6 +11,20 @@ packages:
       sha256: 5bfbd57ade99acee1becb6954e58368fd5f206f79ccd550dd7735c1e2944b04c
   original:
     hackage: sexpresso-1.2.1.0
+- completed:
+    hackage: lsp-1.4.0.0@sha256:d992cb88d6212f113baf372404c141a6bea14c436baa64ea6e4f01b6188c575b,5088
+    pantry-tree:
+      size: 1417
+      sha256: 92dccca5b6429616c0467d7c0dc665001d67cda76250bc70d7d30025c28d4216
+  original:
+    hackage: lsp-1.4.0.0@sha256:d992cb88d6212f113baf372404c141a6bea14c436baa64ea6e4f01b6188c575b,5088
+- completed:
+    hackage: lsp-types-1.4.0.1@sha256:b902952df7becc1827947ee3ff1cd8c746aa8f9f80db330db20e2fdf1b6089e8,4504
+    pantry-tree:
+      size: 4225
+      sha256: 9b4ee01ae646c359ac24551816f6e83a22519c503fc0b4d1da5e46d135abf985
+  original:
+    hackage: lsp-types-1.4.0.1@sha256:b902952df7becc1827947ee3ff1cd8c746aa8f9f80db330db20e2fdf1b6089e8,4504
 snapshots:
 - completed:
     size: 563103

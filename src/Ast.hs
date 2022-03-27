@@ -38,7 +38,7 @@ instance Pretty Pos where
   pretty p = show $ unPos p
 
 instance Pretty SourcePos where
-  pretty (SourcePos {..}) = show sourceName <> ":" <> pretty sourceLine <> ":" <> pretty sourceColumn
+  pretty (SourcePos {..}) = sourceName <> ":" <> pretty sourceLine <> ":" <> pretty sourceColumn
 
 instance Pretty Location where
   pretty = \case Span sp sp' -> pretty sp

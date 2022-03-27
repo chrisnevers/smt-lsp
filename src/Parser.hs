@@ -26,6 +26,6 @@ sexp = decode $ setSpace withComments atomParser
 parseFile :: FilePath -> IO [SE]
 parseFile filename = do
   str <- readFile filename
-  case parse sexp "" str of
+  case parse sexp filename str of
     Left err  -> fail $ "Error:" <> show err
     Right ast -> return ast
